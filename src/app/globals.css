@@ -1,26 +1,113 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-brand-bg: #FDFBF7;
+  --color-brand-bg-alt: #f5f0e6;
+  --color-brand-text: #2D2C2A;
+  --color-brand-accent: #8A7B66;
+  --color-brand-accent-light: #B8AFA1;
+  --color-brand-border: rgba(45, 44, 42, 0.1);
+
+  --color-dark-bg: #1c1b19;
+  --color-dark-text: #FDFBF7;
+  --color-dark-border: rgba(253, 251, 247, 0.1);
+  --color-dark-accent: #c4b9a3;
+
+  --font-heading: "Outfit", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "Space Mono", monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ─── PP Editorial New (local custom font) ─── */
+@font-face {
+  font-family: "PP Editorial New";
+  src: url("/fonts/PPEditorialNew-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@font-face {
+  font-family: "PP Editorial New";
+  src: url("/fonts/PPEditorialNew-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PP Editorial New";
+  src: url("/fonts/PPEditorialNew-Ultralight.woff2") format("woff2");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PP Editorial New";
+  src: url("/fonts/PPEditorialNew-UltralightItalic.woff2") format("woff2");
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+@layer base {
+
+  html,
+  body {
+    @apply antialiased bg-[var(--color-brand-bg)] text-[var(--color-brand-text)];
+    font-family: var(--font-body);
+    font-size: 16px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.clip-text {
+  clip-path: inset(0 0 0 0);
+}
+
+.text-reveal {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+/* Utility class for body font */
+.font-body {
+  font-family: var(--font-body);
+}
+
+/* Ticker loop animation */
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-ticker {
+  animation: ticker 22s linear infinite;
+}
+
+.animate-ticker-press {
+  animation: ticker 30s linear infinite;
+}
+
+/* Globe marker pulse */
+@keyframes marker-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
+
+.animate-marker-pulse {
+  animation: marker-pulse 2.5s ease-out infinite;
 }

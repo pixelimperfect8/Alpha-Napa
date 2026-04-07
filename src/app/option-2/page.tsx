@@ -10,7 +10,7 @@ import ProofPoints from "@/components/v2/ProofPoints";
 import FooterParallax from "@/components/v2/FooterParallax";
 import Analytics from "@/components/Analytics";
 
-export default function Home() {
+export default function Option2() {
   return (
     <SmoothScroll>
       <main className="min-h-screen bg-[#1c1b19]">

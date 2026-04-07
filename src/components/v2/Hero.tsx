@@ -1,0 +1,169 @@
+"use client";
+
+import { motion, useScroll, useTransform } from "framer-motion";
+import { MoveRight } from "lucide-react";
+
+const tickerItems = [
+    "2 hours of focused academics.",
+    "AI-personalized learning.",
+    "Leadership and real-world skills.",
+];
+
+export default function Hero() {
+    const { scrollY } = useScroll();
+    const y = useTransform(scrollY, [0, 1000], [0, 250]);
+
+    const title = "Alpha School";
+    const subtitle = "Napa Valley";
+
+    const container = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.3,
+            },
+        },
+    };
+
+    const item = {
+        hidden: { opacity: 0, y: 100 },
+        show: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 1, ease: [0.16, 1, 0.3, 1] as const },
+        },
+    };
+
+    const tickerContent = Array(8).fill(tickerItems).flat();
+
+    return (
+        <section id="hero" className="relative w-full h-[100svh] flex flex-col justify-center bg-[#131313] text-[#FDFBF7] overflow-hidden rounded-b-[2.5rem]">
+            {/* Background Image with parallax + scrim */}
+            <motion.div
+                initial={{ scale: 1.05, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 2, ease: "easeOut" }}
+                style={{ y }}
+                className="absolute inset-0 z-0 transform-gpu"
+            >
+                <img
+                    src="/assets/newhero.webp"
+                    alt="Children learning at a vineyard table in Napa Valley"
+                    className="w-full h-full object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a08] via-[#0a0a08]/50 to-[#0a0a08]/10 z-10" />
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a08]/40 to-transparent z-10" />
+            </motion.div>
+
+            {/* Top Nav Minimal */}
+            <div className="absolute top-0 w-full flex justify-between px-8 py-8 z-20 text-xs font-mono tracking-widest uppercase opacity-80">
+                <div>{title}</div>
+                <div>{subtitle}</div>
+            </div>
+
+            {/* Main Content */}
+            <div className="relative z-20 w-full px-8 md:px-16">
+                <motion.div
+                    variants={container}
+                    initial="hidden"
+                    animate="show"
+                    className="max-w-[800px] flex flex-col gap-8"
+                >
+                    <div className="overflow-hidden">
+                        <motion.h1
+                            variants={item}
+                            className="text-[12vw] md:text-[7vw] leading-[0.95] font-heading font-semibold tracking-tight m-0 p-0 pb-[0.15em]"
+                        >
+                            <span className="text-[#FDFBF7]">Built for the World </span>
+                            <span className="text-[#8A7B66]">They&rsquo;re Growing Into.</span>
+                        </motion.h1>
+                    </div>
+
+                    <motion.p
+                        variants={item}
+                        className="text-sm md:text-base font-body tracking-wide opacity-80 leading-relaxed font-light max-w-[420px]"
+                    >
+                        A group of Napa Valley families are exploring bringing Alpha School to our community in 2027. We&rsquo;re gathering interest&mdash;join us.
+                    </motion.p>
+
+                    <motion.div variants={item} className="flex">
+                        <a
+                            href="#community"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const lenis = (window as any).__lenis;
+                                if (lenis) {
+                                    lenis.scrollTo("#community");
+                                } else {
+                                    document.getElementById("community")?.scrollIntoView({ behavior: "smooth" });
+                                }
+                            }}
+                            data-track="cta_click"
+                            className="group w-full md:w-auto inline-flex items-center justify-between px-6 py-4 rounded-none bg-[#8A7B66] text-[#FDFBF7] hover:bg-[#FDFBF7] hover:text-[#1c1b19] transition-all gap-8"
+                        >
+                            <span className="text-sm font-heading tracking-wide uppercase">Learn More</span>
+                            <MoveRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </a>
+                    </motion.div>
+                </motion.div>
+            </div>
+
+            {/* Floating Podcast Card */}
+            <motion.a
+                href="https://podcasts.apple.com/us/podcast/invest-like-the-best-with-patrick-oshaughnessy/id1154105909?i=1000723564395"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                className="hidden md:flex absolute bottom-28 right-8 md:right-16 z-30 group"
+            >
+                <div className="bg-white/10 backdrop-blur-xl border border-white/15 rounded-2xl p-4 flex items-center gap-4 max-w-[320px] hover:bg-white/15 transition-colors duration-300 shadow-2xl">
+                    <img
+                        src="https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/61/ae/be/61aebe7a-06e8-7390-3ae5-f2fc5889e36c/mza_10827489189939068066.jpg/600x600bb.jpg"
+                        alt="Invest Like the Best podcast"
+                        className="w-14 h-14 rounded-xl object-cover shrink-0"
+                    />
+                    <div className="flex flex-col gap-1 min-w-0">
+                        <span className="text-[10px] font-mono tracking-widest uppercase text-[#8A7B66]">
+                            Podcast
+                        </span>
+                        <span className="text-sm font-heading font-medium text-[#FDFBF7] leading-tight line-clamp-2">
+                            Building Alpha School &amp; The Future of Education
+                        </span>
+                        <span className="text-[11px] font-body text-white/40 truncate">
+                            Invest Like the Best &middot; Joe Liemandt
+                        </span>
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-[#8A7B66] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-[#FDFBF7] ml-0.5">
+                            <polygon points="6,4 20,12 6,20" />
+                        </svg>
+                    </div>
+                </div>
+            </motion.a>
+
+            {/* Ticker Strip */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 1.5 }}
+                className="absolute bottom-[40px] left-0 right-0 z-20 overflow-hidden"
+            >
+                <div className="flex items-center animate-ticker">
+                    {tickerContent.map((text, i) => (
+                        <span
+                            key={i}
+                            className="shrink-0 flex items-center whitespace-nowrap py-3"
+                        >
+                            <span className="text-xs font-mono tracking-widest uppercase text-[#FDFBF7]/60 px-[12px]">{text}</span>
+                            <span className="text-[#8A7B66]/40 px-[12px]">&bull;</span>
+                        </span>
+                    ))}
+                </div>
+            </motion.div>
+        </section>
+    );
+}
