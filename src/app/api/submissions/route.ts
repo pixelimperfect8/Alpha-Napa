@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     // Notify founders via email
     try {
       await resend.emails.send({
-        from: "Alpha Napa <notifications@alphanapa.org>",
+        from: "Alpha Napa <notifications@napa.pixelimperfect.io>",
         to: FOUNDER_EMAILS,
         subject: `New Interest: ${trimmedName}`,
         html: `

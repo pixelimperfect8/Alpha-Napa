@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     const resetUrl = `${origin}/admin/reset-password?token=${token}`;
 
     await resend.emails.send({
-      from: "Alpha Napa <onboarding@resend.dev>",
+      from: "Alpha Napa <notifications@napa.pixelimperfect.io>",
       to: normalizedEmail,
       subject: "Reset your Alpha Napa admin password",
       html: `
