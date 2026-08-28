@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const FOUNDER_EMAILS = [
   "austin@pacaso.com",
   "tylerx@hundred.com",
@@ -76,6 +74,7 @@ export async function POST(request: NextRequest) {
 
     // Notify founders via email
     try {
+      const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({
         from: "Alpha Napa <notifications@napa.pixelimperfect.io>",
         to: FOUNDER_EMAILS,
