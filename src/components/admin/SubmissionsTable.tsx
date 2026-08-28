@@ -6,6 +6,7 @@ interface Submission {
   id: string;
   family_name: string;
   email: string;
+  num_kids: number | null;
   created_at: string;
   ip_address: string;
 }
@@ -56,6 +57,7 @@ export default function SubmissionsTable({
               {[
                 { key: "family_name", label: "Family Name" },
                 { key: "email", label: "Email" },
+                { key: "num_kids", label: "Children" },
                 { key: "created_at", label: "Date" },
               ].map((col) => (
                 <th
@@ -73,7 +75,7 @@ export default function SubmissionsTable({
             {submissions.length === 0 ? (
               <tr>
                 <td
-                  colSpan={3}
+                  colSpan={4}
                   className="px-6 py-16 text-center text-white/30 font-body"
                 >
                   No submissions yet
@@ -90,6 +92,9 @@ export default function SubmissionsTable({
                   </td>
                   <td className="px-6 py-4 font-body text-white/60">
                     {sub.email}
+                  </td>
+                  <td className="px-6 py-4 font-body text-white/60">
+                    {sub.num_kids ?? "—"}
                   </td>
                   <td
                     className="px-6 py-4 font-mono text-xs text-white/40"

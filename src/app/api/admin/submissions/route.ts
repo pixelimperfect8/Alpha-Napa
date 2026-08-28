@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   const sortBy = searchParams.get("sort") || "created_at";
   const order = searchParams.get("order") === "asc";
 
-  const validSortFields = ["family_name", "email", "created_at"];
+  const validSortFields = ["family_name", "email", "num_kids", "created_at"];
   const sortField = validSortFields.includes(sortBy) ? sortBy : "created_at";
 
   const { data, error } = await supabaseAdmin

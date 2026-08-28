@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
   const [
     totalSubmissions,
     weekSubmissions,
+    childrenRows,
     totalPageViews,
     uniqueSessions,
     timeOnPageEvents,
@@ -28,6 +29,7 @@ export async function GET(request: NextRequest) {
       .from("submissions")
       .select("*", { count: "exact", head: true })
       .gte("created_at", weekAgo.toISOString()),
+    supabaseAdmin.from("submissions").select("num_kids"),
     supabaseAdmin
       .from("page_events")
       .select("*", { count: "exact", head: true })
@@ -54,6 +56,12 @@ export async function GET(request: NextRequest) {
       .select("metadata")
       .eq("event_type", "scroll_depth"),
   ]);
+
+  const totalChildren = (childrenRows.data || []).reduce(
+    (sum: number, row: { num_kids: number | null }) =>
+      sum + (typeof row.num_kids === "number" ? row.num_kids : 0),
+    0
+  );
 
   const uniqueSessionCount = new Set(
     (uniqueSessions.data || []).map(
@@ -113,6 +121,7 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({
     totalSubmissions: totalSubmissions.count || 0,
     weekSubmissions: weekSubmissions.count || 0,
+    totalChildren,
     totalPageViews: totalPageViews.count || 0,
     uniqueSessions: uniqueSessionCount,
     avgTimeOnPage,

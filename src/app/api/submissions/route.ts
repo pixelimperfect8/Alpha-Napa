@@ -12,7 +12,7 @@ const FOUNDER_EMAILS = [
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { family_name, email } = body;
+    const { family_name, email, num_kids } = body;
 
     if (
       !family_name ||
@@ -35,6 +35,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Number of children is optional; when present it must be a whole
+    // number in a sane range. Empty / missing values are stored as null.
+    let numKids: number | null = null;
+    if (num_kids !== undefined && num_kids !== null && num_kids !== "") {
+      const parsed = Number(num_kids);
+      if (!Number.isInteger(parsed) || parsed < 0 || parsed > 20) {
+        return NextResponse.json(
+          { error: "Number of children must be a whole number between 0 and 20" },
+          { status: 400 }
+        );
+      }
+      numKids = parsed;
+    }
+
     const trimmedName = family_name.trim();
     const trimmedEmail = email.trim().toLowerCase();
 
@@ -47,6 +61,7 @@ export async function POST(request: NextRequest) {
     const { error } = await supabaseAdmin.from("submissions").insert({
       family_name: trimmedName,
       email: trimmedEmail,
+      num_kids: numKids,
       ip_address,
       user_agent,
     });
@@ -76,6 +91,10 @@ export async function POST(request: NextRequest) {
               <tr>
                 <td style="padding: 12px 0; border-bottom: 1px solid #eee; color: #888;">Email</td>
                 <td style="padding: 12px 0; border-bottom: 1px solid #eee; color: #2D2C2A;"><a href="mailto:${trimmedEmail}" style="color: #8A7B66;">${trimmedEmail}</a></td>
+              </tr>
+              <tr>
+                <td style="padding: 12px 0; border-bottom: 1px solid #eee; color: #888;">Children</td>
+                <td style="padding: 12px 0; border-bottom: 1px solid #eee; color: #2D2C2A;">${numKids ?? "—"}</td>
               </tr>
               <tr>
                 <td style="padding: 12px 0; color: #888;">Submitted</td>

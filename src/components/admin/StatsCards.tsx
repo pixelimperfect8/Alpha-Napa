@@ -3,6 +3,7 @@
 interface StatsCardsProps {
   totalSubmissions: number;
   weekSubmissions: number;
+  totalChildren: number;
   totalPageViews: number;
   uniqueSessions: number;
   avgTimeOnPage: number;
@@ -11,6 +12,7 @@ interface StatsCardsProps {
 export default function StatsCards({
   totalSubmissions,
   weekSubmissions,
+  totalChildren,
   totalPageViews,
   uniqueSessions,
   avgTimeOnPage,
@@ -22,13 +24,14 @@ export default function StatsCards({
   const cards = [
     { label: "Total Submissions", value: totalSubmissions },
     { label: "This Week", value: weekSubmissions },
+    { label: "Total Children", value: totalChildren },
     { label: "Page Views", value: totalPageViews },
     { label: "Unique Sessions", value: uniqueSessions },
     { label: "Avg Time on Page", value: timeDisplay },
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
       {cards.map((card) => (
         <div
           key={card.label}

@@ -7,6 +7,7 @@ import { ArrowUpRight, Check } from "lucide-react";
 export default function SplitScreen() {
     const [familyName, setFamilyName] = useState("");
     const [email, setEmail] = useState("");
+    const [numKids, setNumKids] = useState("");
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -32,7 +33,7 @@ export default function SplitScreen() {
             const res = await fetch("/api/submissions", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ family_name: familyName, email }),
+                body: JSON.stringify({ family_name: familyName, email, num_kids: numKids }),
             });
 
             if (!res.ok) {
@@ -156,6 +157,17 @@ export default function SplitScreen() {
                                     placeholder="Family Name"
                                     value={familyName}
                                     onChange={(e) => setFamilyName(e.target.value)}
+                                    required
+                                    className="w-full bg-white/5 border border-white/10 rounded-none px-6 py-4 focus:outline-none focus:border-[#8A7B66] transition-colors font-body text-sm"
+                                />
+                                <input
+                                    type="number"
+                                    inputMode="numeric"
+                                    min={1}
+                                    max={20}
+                                    placeholder="Number of Children"
+                                    value={numKids}
+                                    onChange={(e) => setNumKids(e.target.value)}
                                     required
                                     className="w-full bg-white/5 border border-white/10 rounded-none px-6 py-4 focus:outline-none focus:border-[#8A7B66] transition-colors font-body text-sm"
                                 />

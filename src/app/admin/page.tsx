@@ -12,6 +12,7 @@ import ScrollDepth from "@/components/admin/ScrollDepth";
 interface Stats {
   totalSubmissions: number;
   weekSubmissions: number;
+  totalChildren: number;
   totalPageViews: number;
   uniqueSessions: number;
   avgTimeOnPage: number;
@@ -24,6 +25,7 @@ interface Submission {
   id: string;
   family_name: string;
   email: string;
+  num_kids: number | null;
   created_at: string;
   ip_address: string;
 }
@@ -133,10 +135,10 @@ function AdminContent() {
 
   function handleExportCSV() {
     if (!submissions.length) return;
-    const header = "Family Name,Email,Date,IP Address";
+    const header = "Family Name,Email,Children,Date,IP Address";
     const rows = submissions.map((s) => {
       const date = new Date(s.created_at).toLocaleDateString("en-US");
-      return `"${s.family_name}","${s.email}","${date}","${s.ip_address || ""}"`;
+      return `"${s.family_name}","${s.email}","${s.num_kids ?? ""}","${date}","${s.ip_address || ""}"`;
     });
     const csv = [header, ...rows].join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
@@ -336,6 +338,7 @@ function AdminContent() {
             <StatsCards
               totalSubmissions={stats.totalSubmissions}
               weekSubmissions={stats.weekSubmissions}
+              totalChildren={stats.totalChildren}
               totalPageViews={stats.totalPageViews}
               uniqueSessions={stats.uniqueSessions}
               avgTimeOnPage={stats.avgTimeOnPage}
