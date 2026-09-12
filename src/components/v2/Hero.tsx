@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { MoveRight } from "lucide-react";
 
 const tickerItems = [
@@ -9,9 +10,43 @@ const tickerItems = [
     "Leadership and real-world skills.",
 ];
 
+// Podcasts featured in the floating card. The first entry shows by default
+// and the card auto-cycles through them.
+const podcasts = [
+    {
+        url: "https://www.hubermanlab.com/episode/how-to-accelerate-learning-and-improve-education-joe-liemandt",
+        image: "https://cdn.prod.website-files.com/64751ad903a904b42aa4adc1/6a94e52d60d2c065fd146252_SITE_JL_L1190680.webp",
+        alt: "Huberman Lab podcast",
+        title: "How to Accelerate Learning & Improve Education",
+        show: "Huberman Lab · Joe Liemandt",
+    },
+    {
+        url: "https://podcasts.apple.com/us/podcast/invest-like-the-best-with-patrick-oshaughnessy/id1154105909?i=1000723564395",
+        image: "https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/61/ae/be/61aebe7a-06e8-7390-3ae5-f2fc5889e36c/mza_10827489189939068066.jpg/600x600bb.jpg",
+        alt: "Invest Like the Best podcast",
+        title: "Building Alpha School & The Future of Education",
+        show: "Invest Like the Best · Joe Liemandt",
+    },
+];
+
+// How long each podcast stays visible before advancing (ms).
+const PODCAST_ROTATE_MS = 15000;
+
 export default function Hero() {
     const { scrollY } = useScroll();
     const y = useTransform(scrollY, [0, 1000], [0, 250]);
+
+    // Podcast carousel: starts on the first entry and advances on a timer.
+    // The timer resets whenever `activePodcast` changes, so manual dot clicks
+    // also restart the countdown.
+    const [activePodcast, setActivePodcast] = useState(0);
+    useEffect(() => {
+        const id = setInterval(() => {
+            setActivePodcast((prev) => (prev + 1) % podcasts.length);
+        }, PODCAST_ROTATE_MS);
+        return () => clearInterval(id);
+    }, [activePodcast]);
+    const podcast = podcasts[activePodcast];
 
     const title = "Alpha School";
     const subtitle = "Napa Valley";
@@ -110,40 +145,73 @@ export default function Hero() {
                 </motion.div>
             </div>
 
-            {/* Floating Podcast Card */}
-            <motion.a
-                href="https://podcasts.apple.com/us/podcast/invest-like-the-best-with-patrick-oshaughnessy/id1154105909?i=1000723564395"
-                target="_blank"
-                rel="noopener noreferrer"
+            {/* Floating Podcast Card (auto-rotating carousel) */}
+            <div className="hidden md:block absolute bottom-28 right-8 md:right-16 z-30 scale-[1.2] origin-bottom-right">
+            <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                className="hidden md:flex absolute bottom-28 right-8 md:right-16 z-30 group"
+                className="flex flex-col gap-3 w-[320px]"
             >
-                <div className="bg-white/10 backdrop-blur-xl border border-white/15 rounded-2xl p-4 flex items-center gap-4 max-w-[320px] hover:bg-white/15 transition-colors duration-300 shadow-2xl">
-                    <img
-                        src="https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/61/ae/be/61aebe7a-06e8-7390-3ae5-f2fc5889e36c/mza_10827489189939068066.jpg/600x600bb.jpg"
-                        alt="Invest Like the Best podcast"
-                        className="w-14 h-14 rounded-xl object-cover shrink-0"
-                    />
-                    <div className="flex flex-col gap-1 min-w-0">
-                        <span className="text-[10px] font-mono tracking-widest uppercase text-[#8A7B66]">
-                            Podcast
-                        </span>
-                        <span className="text-sm font-heading font-medium text-[#FDFBF7] leading-tight line-clamp-2">
-                            Building Alpha School &amp; The Future of Education
-                        </span>
-                        <span className="text-[11px] font-body text-white/40 truncate">
-                            Invest Like the Best &middot; Joe Liemandt
-                        </span>
-                    </div>
-                    <div className="w-8 h-8 rounded-full bg-[#8A7B66] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-[#FDFBF7] ml-0.5">
-                            <polygon points="6,4 20,12 6,20" />
-                        </svg>
-                    </div>
+                <a
+                    href={podcast.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block"
+                >
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={activePodcast}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
+                            className="bg-white/10 backdrop-blur-xl border border-white/15 rounded-2xl p-4 flex items-center gap-4 hover:bg-white/15 transition-colors duration-300 shadow-2xl"
+                        >
+                            <img
+                                src={podcast.image}
+                                alt={podcast.alt}
+                                className="w-14 h-14 rounded-xl object-cover shrink-0"
+                            />
+                            <div className="flex flex-col gap-1 min-w-0 flex-1">
+                                <span className="text-[10px] font-mono tracking-widest uppercase text-[#8A7B66]">
+                                    Podcast
+                                </span>
+                                <span className="text-sm font-heading font-medium text-[#FDFBF7] leading-tight line-clamp-2">
+                                    {podcast.title}
+                                </span>
+                                <span className="text-[11px] font-body text-white/40 truncate">
+                                    {podcast.show}
+                                </span>
+                            </div>
+                            <div className="w-8 h-8 rounded-full bg-[#8A7B66] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-[#FDFBF7] ml-0.5">
+                                    <polygon points="6,4 20,12 6,20" />
+                                </svg>
+                            </div>
+                        </motion.div>
+                    </AnimatePresence>
+                </a>
+
+                {/* Navigation dots */}
+                <div className="flex items-center justify-center gap-2">
+                    {podcasts.map((p, i) => (
+                        <button
+                            key={p.url}
+                            type="button"
+                            onClick={() => setActivePodcast(i)}
+                            aria-label={`Show podcast ${i + 1}: ${p.title}`}
+                            aria-current={i === activePodcast}
+                            className={`h-1.5 rounded-full transition-all duration-300 ${
+                                i === activePodcast
+                                    ? "w-6 bg-[#8A7B66]"
+                                    : "w-1.5 bg-white/30 hover:bg-white/50"
+                            }`}
+                        />
+                    ))}
                 </div>
-            </motion.a>
+            </motion.div>
+            </div>
 
             {/* Ticker Strip */}
             <motion.div
