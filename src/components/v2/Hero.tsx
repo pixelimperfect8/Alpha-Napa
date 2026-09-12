@@ -99,7 +99,8 @@ export default function Hero() {
             </div>
 
             {/* Main Content */}
-            <div className="relative z-20 w-full px-8 md:px-16">
+            {/* Mobile: nudge the block up (mb pushes it up within the centered flex) to clear the full-width podcast card. */}
+            <div className="relative z-20 w-full px-8 md:px-16 mb-48 md:mb-0">
                 <motion.div
                     variants={container}
                     initial="hidden"
@@ -146,12 +147,13 @@ export default function Hero() {
             </div>
 
             {/* Floating Podcast Card (auto-rotating carousel) */}
-            <div className="hidden md:block absolute bottom-28 right-8 md:right-16 z-30 scale-[1.2] origin-bottom-right">
+            {/* Mobile: full-width above the ticker. Desktop: floating bottom-right, scaled 20%. */}
+            <div className="absolute bottom-28 left-4 right-4 md:left-auto md:right-16 z-30 md:scale-[1.2] md:origin-bottom-right">
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                className="flex flex-col gap-3 w-[320px]"
+                className="flex flex-col gap-3 w-full md:w-[320px]"
             >
                 <a
                     href={podcast.url}
